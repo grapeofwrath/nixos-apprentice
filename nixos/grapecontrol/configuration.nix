@@ -1,16 +1,14 @@
 {
+    config,
     inputs,
-    outputs,
-    system,
-    gLib,
-    gVar,
-    hostName,
-    pkgs,
     lib,
     ...
 }: {
   imports = [
     ./hardware-configuration.nix
+    ./../modules/base/sops.nix
+    ./../modules/base/tailscale.nix
+    ./../modules/base/latestKernel.nix
   ];
 
   boot.tmp.cleanOnBoot = true;
@@ -31,20 +29,40 @@
     };
   };
   system.stateVersion = "23.11";
-    # environment.systemPackages = [
-    #   inputs.home-manager.packages.${pkgs.system}.default
-    # ];
-    # home-manager = {
-    #   useUserPackages = true;
-    #   useGlobalPkgs = true;
-    #   extraSpecialArgs = {
-    #     inherit inputs outputs system gLib gVar hostName;
-    #   };
-    #
-    #   users = {
-    #       marcus = import ./../../home-manager/marcus-grapecontrol.nix;
-    #     };
-    # };
+
+  nix = {
+    registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+    nixPath = ["/etc/nix/path"];
+    settings = {
+      experimental-features = "nix-command flakes";
+      auto-optimise-store = true;
+      warn-dirty = false;
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
+
+  environment = {
+    etc = lib.mapAttrs' (name: value: {
+      name = "nix/path/${name}";
+      value.source = value.flake;
+    })
+    config.nix.registry;
+    variables = {
+      EDITOR = "nvim";
+    };
+  };
+
+  i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
+
+  time.timeZone = lib.mkDefault "America/Los_Angeles";
+
+  programs = {
+    fish.enable = true;
+  };
 
   # auto-generated for DigitalOcean
   networking = {
