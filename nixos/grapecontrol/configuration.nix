@@ -1,4 +1,14 @@
-{ lib, ... }: {
+{
+    inputs,
+    outputs,
+    system,
+    gLib,
+    gVar,
+    hostName,
+    pkgs,
+    lib,
+    ...
+}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -11,7 +21,6 @@
   users = {
     mutableUsers = true;
     users = {
-        # root.openssh.authorizedKeys.keys = [''ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJX1z3VLktainIni2wvMoNvdWPMVaIDifd0S0KnVXKom marcus@grapespire'' ];
         marcus = {
             isNormalUser = true;
             home = "/home/marcus";
@@ -22,6 +31,20 @@
     };
   };
   system.stateVersion = "23.11";
+    environment.systemPackages = [
+      inputs.home-manager.packages.${pkgs.system}.default
+    ];
+    home-manager = {
+      useUserPackages = true;
+      useGlobalPkgs = true;
+      extraSpecialArgs = {
+        inherit inputs outputs system gLib gVar hostName;
+      };
+
+      users = {
+          marcus = import ./../../home-manager/marcus-grapecontrol.nix;
+        };
+    };
 
   # auto-generated for DigitalOcean
   networking = {
