@@ -11,6 +11,7 @@ in {
     autoLogin = mkOption {
       type = types.bool;
       default = false;
+      description = "Whether or not to enable auto login with defaultUser";
     };
     #TODO
     # make as submodule

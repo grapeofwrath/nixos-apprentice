@@ -27,8 +27,4 @@
     nushell.enable = true;
     zellij.enable = true;
   };
-
-  desktop = {
-    hyprland.enable = false;
-  };
 }

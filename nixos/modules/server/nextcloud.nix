@@ -14,7 +14,7 @@ in {
       nextcloud = {
         enable = true;
         package = pkgs.nextcloud30;
-        hostName = "cloud.localhost";
+        hostName = "localhost:3001";
 
         database.createLocally = true;
 
