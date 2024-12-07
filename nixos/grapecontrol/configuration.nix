@@ -31,20 +31,20 @@
     };
   };
   system.stateVersion = "23.11";
-    environment.systemPackages = [
-      inputs.home-manager.packages.${pkgs.system}.default
-    ];
-    home-manager = {
-      useUserPackages = true;
-      useGlobalPkgs = true;
-      extraSpecialArgs = {
-        inherit inputs outputs system gLib gVar hostName;
-      };
-
-      users = {
-          marcus = import ./../../home-manager/marcus-grapecontrol.nix;
-        };
-    };
+    # environment.systemPackages = [
+    #   inputs.home-manager.packages.${pkgs.system}.default
+    # ];
+    # home-manager = {
+    #   useUserPackages = true;
+    #   useGlobalPkgs = true;
+    #   extraSpecialArgs = {
+    #     inherit inputs outputs system gLib gVar hostName;
+    #   };
+    #
+    #   users = {
+    #       marcus = import ./../../home-manager/marcus-grapecontrol.nix;
+    #     };
+    # };
 
   # auto-generated for DigitalOcean
   networking = {
