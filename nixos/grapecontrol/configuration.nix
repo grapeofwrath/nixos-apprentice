@@ -1,6 +1,7 @@
 {
     config,
     inputs,
+    pkgs,
     lib,
     ...
 }: {
@@ -53,6 +54,10 @@
         variables = {
             EDITOR = "nvim";
         };
+        systemPackages = with pkgs; [
+            git
+            neovim
+        ];
     };
 
     i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
