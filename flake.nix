@@ -94,6 +94,19 @@
             ./nixos/grapestation/configuration.nix
           ];
         };
+
+      grapecontrol = let
+        hostName = "grapecontrol";
+      in
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs outputs system pkgs stable gLib gVar hostName;
+          };
+          modules = [
+            ./nixos/grapecontrol/configuration.nix
+          ];
+        };
     };
 
     homeConfigurations = {
