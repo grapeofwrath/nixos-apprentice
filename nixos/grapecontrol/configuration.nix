@@ -64,6 +64,22 @@
     fish.enable = true;
   };
 
+  services.caddy = {
+      enable = true;
+      virtualHosts."hoarder.adventurerstome.com".extraConfig = ''
+          reverse_proxy http://grapelab:3000
+        '';
+    };
+
+  base = {
+    latestKernel.enable = true;
+    tailscaleAutoConnect = {
+      enable = true;
+      authkeyFile = config.sops.secrets.tailscale_key.path;
+      loginServer = "https://login.tailscale.com";
+    };
+  };
+
   # auto-generated for DigitalOcean
   networking = {
     nameservers = [ "8.8.8.8"
