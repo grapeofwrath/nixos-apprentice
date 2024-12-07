@@ -48,7 +48,6 @@
 
   server = {
     foundryvtt.enable = true;
-    hoarder.enable = true;
     nextcloud.enable = true;
   };
 
