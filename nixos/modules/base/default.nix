@@ -1,6 +1,7 @@
 {
   config,
   inputs,
+  pkgs,
   lib,
   gLib,
   gVar,
@@ -48,7 +49,7 @@
 
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
-  time.timeZone = lib.mkDefault "America/Chicago";
+  time.timeZone = lib.mkDefault "America/Los_Angeles";
 
   console = let
     theme = builtins.attrValues gVar.palette;
@@ -56,6 +57,10 @@
     colors = map (v: lib.strings.removePrefix "#" v) theme;
     useXkbConfig = true;
   };
+
+  fonts.packages = with pkgs; [
+      nerd-fonts.caskaydia-cove
+  ];
 
   programs = {
     fish.enable = true;

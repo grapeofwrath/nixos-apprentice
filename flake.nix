@@ -13,15 +13,6 @@
     hardware.url = "github:nixos/nixos-hardware";
     sops-nix.url = "github:Mic92/sops-nix";
 
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
-    hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
-    # ags.url = "github:Aylur/ags";
-    hyprpanel = {
-      url = "github:Jas-SinghFSU/HyprPanel";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    walker.url = "github:abenz1267/walker";
-
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -47,9 +38,7 @@
         allowUnfree = true;
         allowUnfreePredicate = _: true;
       };
-      overlays = [
-        inputs.hyprpanel.overlay
-      ];
+      # overlays = [];
     };
 
     stable = import nixpkgs-stable {
@@ -133,20 +122,6 @@
           };
           modules = [
             ./home-manager/marcus-grapespire.nix
-          ];
-        };
-
-      "paramount-grapespire" = let
-        hostName = "grapespire";
-        username = "paramount";
-      in
-        home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = {
-            inherit inputs outputs system gLib gVar hostName username;
-          };
-          modules = [
-            ./home-manager/paramount-grapespire.nix
           ];
         };
 

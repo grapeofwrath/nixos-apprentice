@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ./../modules/base
@@ -12,26 +16,30 @@
 
   environment.systemPackages = with pkgs; [
     vim
+    wget
     curl
     virt-manager
     qemu
     qemu_kvm
+    compose2nix
   ];
 
   # Personal Modules
-  users.additionalUsers = ["paramount"];
-
   base = {
     battery.enable = true;
     latestKernel.enable = true;
-    tailscale.enable = true;
+    tailscaleAutoConnect = {
+      enable = true;
+      authkeyFile = config.sops.secrets.tailscale_key.path;
+      loginServer = "https://login.tailscale.com";
+    };
     appimage.enable = true;
   };
 
   desktop = {
-    hyprland.enable = true;
     plasma.enable = false;
-    tty-login.enable = true;
+    tty-login.enable = false;
+    gnome.enable = true;
   };
 
   gaming = {
@@ -39,9 +47,11 @@
   };
 
   server = {
-    podman.enable = true;
+    foundryvtt.enable = true;
+    hoarder.enable = true;
+    nextcloud.enable = true;
   };
 
   # Believe it or not, if you change this? Straight to jail.
-  system.stateVersion = "24.05";
+  system.stateVersion = "24.11";
 }

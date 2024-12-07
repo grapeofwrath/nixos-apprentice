@@ -24,9 +24,9 @@
         group = "users";
       };
       nextcloud_admin = {
-        group = "users";
+        group = "nextcloud";
       };
-      tailscale = {
+      tailscale_key = {
         group = "users";
       };
     };

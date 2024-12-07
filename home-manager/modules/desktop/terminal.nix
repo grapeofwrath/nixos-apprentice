@@ -10,7 +10,7 @@ in {
   options.desktop.terminal = with lib;{
     fontSize = mkOption {
       type = types.int;
-      default = 14;
+      default = 12;
     };
   };
 

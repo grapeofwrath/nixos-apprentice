@@ -25,7 +25,6 @@
     zellij.enable = true;
   };
   desktop = {
-    hyprland.enable = true;
     steam.enable = true;
   };
 }

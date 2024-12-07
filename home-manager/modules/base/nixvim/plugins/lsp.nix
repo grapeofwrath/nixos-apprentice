@@ -4,7 +4,7 @@
       lsp = {
         enable = true;
         servers = {
-          lua-ls.enable = true;
+          lua_ls.enable = true;
           marksman.enable = true;
           nushell.enable = true;
           pylsp.enable = true;
@@ -19,7 +19,7 @@
           astro.enable = true;
           tailwindcss.enable = true;
           templ.enable = true;
-          ts-ls.enable = true;
+          ts_ls.enable = true;
         };
       };
       lspkind = {

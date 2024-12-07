@@ -11,12 +11,7 @@
 
     packages = with pkgs; [
       # cli
-      (pkgs.nerdfonts.override {
-        fonts = [
-          "JetBrainsMono"
-          "CascadiaCode"
-        ];
-      })
+      # nerd-fonts.caskaydia-cove
       font-awesome
       polkit
       tree
