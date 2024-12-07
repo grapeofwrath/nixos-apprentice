@@ -28,6 +28,8 @@
       enable = true;
       authkeyFile = config.sops.secrets.tailscale_key.path;
       loginServer = "https://login.tailscale.com";
+      exitNode = "grapecontrol";
+      exitNodeAllowLanAccess = true;
     };
   };
 
