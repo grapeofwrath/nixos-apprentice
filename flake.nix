@@ -55,6 +55,10 @@
   in {
     formatter.${system} = pkgs.alejandra;
 
+    # nixosModules = import ./modules/nixos;
+    #
+    # homeManagerModules = import ./modules/home-manager;
+
     nixosConfigurations = {
       grapelab = let
         hostName = "grapelab";
