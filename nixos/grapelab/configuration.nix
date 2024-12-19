@@ -42,9 +42,10 @@
   };
 
   server = {
+      ente-server.enable = true;
     foundryvtt.enable = true;
     hoarder.enable = true;
-    nextcloud.enable = true;
+    nextcloud.enable = false;
   };
 
   # Believe it or not, if you change this? Straight to jail.

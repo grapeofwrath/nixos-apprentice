@@ -62,7 +62,7 @@ in {
       virtualisation.oci-containers.containers."ente-server-minio-provision" = {
         image = "minio/mc";
         volumes = [
-          "/home/marcus/srv/ente/server/minio-provision.sh:/provision.sh:ro"
+          "/home/marcus/srv/ente/server/scripts/compose/minio-provision.sh:/provision.sh:ro"
           "ente-server_minio-data:/data:rw"
         ];
         dependsOn = [
@@ -97,12 +97,12 @@ in {
       virtualisation.oci-containers.containers."ente-server-museum" = {
         image = "ghcr.io/ente-io/server";
         environment = {
-          "ENTE_CREDENTIALS_FILE" = "/home/marcus/srv/ente/server/credentials.yaml";
+          "ENTE_CREDENTIALS_FILE" = "/home/marcus/srv/ente/server/scripts/compose/credentials.yaml";
         };
         volumes = [
           "/home/marcus/srv/ente/server/data:/data:ro"
           "/home/marcus/srv/ente/server/museum.yaml:/museum.yaml:ro"
-          "/home/marcus/srv/ente/server/credentials.yaml:/credentials.yaml:ro"
+          "/home/marcus/srv/ente/server/scripts/compose/credentials.yaml:/credentials.yaml:ro"
           "ente-server_custom-logs:/var/logs:rw"
         ];
         ports = [
