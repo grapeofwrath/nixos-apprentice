@@ -18,10 +18,7 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        jovian = {
-            url = "github:Jovian-Experiments/Jovian-NixOS";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
+        jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
 
         jot.url = "github:grapeofwrath/jot";
         phortune.url = "github:grapeofwrath/phortune";
