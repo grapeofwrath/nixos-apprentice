@@ -1,7 +1,7 @@
 {...}: {
-  programs.nixvim = {
-    plugins.zellij = {
-      enable = true;
+    programs.nixvim = {
+        plugins.zellij = {
+            enable = true;
+        };
     };
-  };
 }

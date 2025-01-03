@@ -1,95 +1,122 @@
 {
-  config,
-  inputs,
-  pkgs,
-  lib,
-  gLib,
-  gVar,
-  ...
+    config,
+    inputs,
+    pkgs,
+    lib,
+    hostName,
+    gLib,
+    gVar,
+    ...
 }: {
-  imports = gLib.scanPaths ./.;
+    imports = (gLib.scanPaths ./.) ++ [inputs.sops-nix.nixosModules.sops];
 
-  nix = {
-    registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
-    nixPath = ["/etc/nix/path"];
-    settings = {
-      experimental-features = "nix-command flakes";
-      auto-optimise-store = true;
-      warn-dirty = false;
+    nix = {
+        registry = (lib.mapAttrs (_: flake: {inherit flake;})) ((lib.filterAttrs (_: lib.isType "flake")) inputs);
+        nixPath = ["/etc/nix/path"];
+        settings = {
+            experimental-features = "nix-command flakes";
+            auto-optimise-store = true;
+            warn-dirty = false;
+        };
+        gc = {
+            automatic = true;
+            dates = "weekly";
+            options = "--delete-older-than 7d";
+        };
     };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
+
+    sops = {
+        defaultSopsFile = ./../../../secrets.yaml;
+        validateSopsFiles = false;
+        age = {
+            # auto imports host SSH keys as age keys
+            sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
+            keyFile = "/var/lib/sops-nix/key.txt";
+            generateKey = true;
+        };
+        # secrets are output to /run/secrets
+        # ie /run/secrets/gitea_dbpass
+        secrets = {
+            wifi-ssid = {
+                group = "users";
+            };
+            wifi-pass = {
+                group = "users";
+            };
+            nextcloud_admin = {
+                group = "nextcloud";
+            };
+            tailscale_key = {
+                group = "users";
+            };
+        };
     };
-  };
 
-  environment = {
-    etc = lib.mapAttrs' (name: value: {
-      name = "nix/path/${name}";
-      value.source = value.flake;
-    })
-    config.nix.registry;
-    variables = {
-      EDITOR = "nvim";
+    environment = {
+        etc = lib.mapAttrs' (name: value: {
+            name = "nix/path/${name}";
+            value.source = value.flake;
+        }) config.nix.registry;
+        variables = {
+            EDITOR = "nvim";
+        };
     };
-  };
 
-  boot = {
-    loader = {
-      systemd-boot = {
-        enable = true;
-        editor = false;
-      };
-      efi.canTouchEfiVariables = true;
+    boot = {
+        loader = {
+            systemd-boot = {
+                enable = true;
+                editor = false;
+            };
+            efi.canTouchEfiVariables = true;
+        };
+        kernelModules = ["v4l2loopback"];
+        kernelPackages = pkgs.linuxPackages_latest;
+        extraModulePackages = [config.boot.kernelPackages.v4l2loopback];
     };
-    kernelModules = ["v4l2loopback"];
-    extraModulePackages = [config.boot.kernelPackages.v4l2loopback];
-  };
 
-  i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
+    i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
-  time.timeZone = lib.mkDefault "America/Los_Angeles";
+    time.timeZone = lib.mkDefault "America/Los_Angeles";
 
-  console = let
-    theme = builtins.attrValues gVar.palette;
-  in {
-    colors = map (v: lib.strings.removePrefix "#" v) theme;
-    useXkbConfig = true;
-  };
-
-  fonts.packages = with pkgs; [
-      nerd-fonts.caskaydia-cove
-  ];
-
-  programs = {
-    fish.enable = true;
-  };
-
-  services = {
-    openssh = {
-      enable = true;
-      settings = {
-        PermitRootLogin = "no";
-        PasswordAuthentication = false;
-      };
+    networking = {
+        inherit hostName;
+        networkmanager = {
+            enable = true;
+        };
+        firewall = {
+            enable = true;
+        };
     };
-    pipewire = {
-      enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
-      pulse.enable = true;
-    };
-    xserver = {
-      xkb = {
-        layout = lib.mkDefault "us";
-        options = "caps:escape";
-      };
-    };
-  };
 
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
+    console = let
+        theme = builtins.attrValues gVar.palette;
+    in {
+        colors = map (v: lib.strings.removePrefix "#" v) theme;
+        useXkbConfig = true;
+    };
+
+    fonts.packages = with pkgs; [
+        nerd-fonts.caskaydia-cove
+    ];
+
+    services = {
+        openssh = {
+            enable = true;
+            settings = {
+                PermitRootLogin = "no";
+                PasswordAuthentication = false;
+            };
+        };
+        xserver = {
+            xkb = {
+                layout = lib.mkDefault "us";
+                options = "caps:escape";
+            };
+        };
+    };
+
+    programs = {
+        fish.enable = true;
+    };
 }

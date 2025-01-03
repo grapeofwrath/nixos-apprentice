@@ -1,30 +1,12 @@
 {pkgs, ...}: {
-  imports = [
-    ./modules/base
-    ./modules/desktop
-  ];
-  home.packages = with pkgs; [
-    # desktop
-    brave
-    # discord
-    vesktop
-    spotify
-    gnome-keyring
-    kdePackages.qtstyleplugin-kvantum
-    # charm
-    vhs
-    charm-freeze
-    glow
-    # gaming
-    wineWowPackages.unstableFull
-    moonlight-qt
-  ];
+    imports = [
+        ./modules/base
+        ./modules/desktop
+    ];
+    home.packages = with pkgs; [
+        brave
+        gnome-keyring
+    ];
 
-  # Personal modules
-  base = {
-    dev.enable = true;
-    fish.enable = true;
-    nushell.enable = true;
-    zellij.enable = true;
-  };
+    devUtils.enable = true;
 }

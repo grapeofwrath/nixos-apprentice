@@ -1,48 +1,78 @@
-{pkgs, ...}: {
-  imports = [
-    ./hardware-configuration.nix
-    ./../modules/base
-    ./../modules/desktop
-    ./../modules/users
-    ./../modules/gaming
-  ];
+{
+    config,
+    pkgs,
+    gVar,
+    ...
+}: {
+    imports = [
+        ./hardware-configuration.nix
+        ./../modules/base
+        ./../modules/users
+    ];
 
-  virtualisation.libvirtd.enable = true;
+    virtualisation.libvirtd.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    vim
-    curl
-    wget
-    virt-manager
-    qemu
-    qemu_kvm
-    bottles
-  ];
+    environment.systemPackages = with pkgs; [
+        vim
+        curl
+        wget
+        virt-manager
+        qemu
+        qemu_kvm
+        unzip
+        xdotool
+        xorg.xwininfo
+        yad
+        # gaming specific
+        steam-run
+        protonup-qt
+        wineWowPackages.unstableFull
+    ];
 
-  # Personal Modules
-  base = {
-    appimage.enable = true;
-    bluetooth.enable = true;
-    fish.enable = true;
-    system.latestKernel = true;
-    tailscale.enable = true;
-    vmware.enable = false;
-  };
-
-  desktop = {
-    hyprland.enable = false;
-    plasma = {
-      enable = true;
-      autoLogin = false;
+    users.users.${gVar.defaultUser} = {
+        extraGroups = [
+            "wheel"
+            "networkmanager"
+            "libvirtd"
+            "input"
+        ];
+        packages = with pkgs; [
+            brave
+            discord
+            spotify
+            filezilla
+            foliate
+        ];
     };
-    tty-login.enable = false;
-  };
 
-  gaming = {
-    steam.enable = true;
-    sunshine.enable = false;
-  };
+    jovian = {
+        decky-loader = {
+            user = gVar.defaultUser;
+            enable = true;
+        };
+        hardware = {
+            has.amd.gpu = true;
+            amd.gpu.enableBacklightControl = false;
+        };
+        steam = {
+            updater.splash = "steamos";
+            enable = true;
+            autoStart = true;
+            user = gVar.defaultUser;
+            desktopSession = "plasma";
+        };
+        steamos = {
+            useSteamOSConfig = true;
+        };
+    };
 
-  # Believe it or not, if you change this? Straight to jail.
-  system.stateVersion = "24.05";
+    # Personal Modules
+    tailscaleAutoConnect = {
+        enable = true;
+        authkeyFile = config.sops.secrets.tailscale_key.path;
+        loginServer = "https://login.tailscale.com";
+    };
+
+    # Believe it or not, if you change this? Straight to jail.
+    system.stateVersion = "24.05";
 }

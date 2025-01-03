@@ -1,8 +1,8 @@
 {...}: {
-  programs.nixvim = {
-    plugins.alpha = {
-      enable = true;
-      theme = "dashboard";
+    programs.nixvim = {
+        plugins.alpha = {
+            enable = true;
+            theme = "dashboard";
+        };
     };
-  };
 }

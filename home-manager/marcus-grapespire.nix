@@ -1,30 +1,14 @@
 {pkgs, ...}: {
-  imports = [
-    ./modules/base
-    ./modules/desktop
-  ];
-  home = {
-    username = "marcus";
-    packages = with pkgs; [
-      # desktop
-      element-desktop
-      kdePackages.qtstyleplugin-kvantum
-      # design
-      blender
-      # gaming
-      wineWowPackages.unstableFull
-      moonlight-qt
+    imports = [
+        ./modules/base
+        ./modules/desktop
     ];
-  };
+    home = {
+        username = "marcus";
+        packages = with pkgs; [
+            blender
+        ];
+    };
 
-  # Personal modules
-  base = {
-    dev.enable = true;
-    fish.enable = true;
-    nushell.enable = true;
-    zellij.enable = true;
-  };
-  desktop = {
-    steam.enable = true;
-  };
+    devUtils.enable = true;
 }

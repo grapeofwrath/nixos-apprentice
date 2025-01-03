@@ -1,56 +1,67 @@
 {
-  config,
-  pkgs,
-  ...
+    config,
+    pkgs,
+    inputs,
+    system,
+    gVar,
+    ...
 }: {
-  imports = [
-    ./hardware-configuration.nix
-    ./../modules/base
-    ./../modules/desktop
-    ./../modules/users
-    ./../modules/gaming
-    ./../modules/server
-  ];
+    imports = [
+        ./hardware-configuration.nix
+        ./../modules/base
+        ./../modules/desktop
+        ./../modules/users
+        # ./../modules/server
+    ];
 
-  virtualisation.libvirtd.enable = true;
+    virtualisation.libvirtd.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    curl
-    virt-manager
-    qemu
-    qemu_kvm
-    compose2nix
-  ];
+    environment.systemPackages = with pkgs; [
+        vim
+        wget
+        curl
+        virt-manager
+        qemu
+        qemu_kvm
+        compose2nix
+        nixd
+    ];
 
-  # Personal Modules
-  base = {
-    battery.enable = true;
-    latestKernel.enable = true;
-    tailscaleAutoConnect = {
-      enable = true;
-      authkeyFile = config.sops.secrets.tailscale_key.path;
-      loginServer = "https://login.tailscale.com";
+    users.users.${gVar.defaultUser} = {
+        extraGroups = [
+            "wheel"
+            "networkmanager"
+            "libvirtd"
+            "docker"
+            "podman"
+            "nextcloud"
+        ];
+        packages = with pkgs; [
+            brave
+            discord
+            spotify
+            gnome-keyring
+            filezilla
+            foliate
+            vhs
+            charm-freeze
+            glow
+            # custom
+            #jot
+        ];
     };
-    appimage.enable = true;
-  };
 
-  desktop = {
-    plasma.enable = false;
-    tty-login.enable = false;
+    # Personal Modules
+    battery.enable = true;
+
+    tailscaleAutoConnect = {
+        enable = true;
+        authkeyFile = config.sops.secrets.tailscale_key.path;
+        loginServer = "https://login.tailscale.com";
+    };
+
     gnome.enable = true;
-  };
 
-  gaming = {
-    steam.enable = true;
-  };
-
-  server = {
-    foundryvtt.enable = true;
-    nextcloud.enable = true;
-  };
-
-  # Believe it or not, if you change this? Straight to jail.
-  system.stateVersion = "24.11";
+    # Believe it or not, if you change this? Straight to jail.
+    system.stateVersion = "24.11";
 }

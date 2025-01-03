@@ -4,15 +4,15 @@
     lib,
     ...
 }: let
-    cfg = config.server.foundryvtt;
+    cfg = config.foundryVTT;
 in {
-    options.server.foundryvtt = {
-        enable = lib.mkEnableOption "Enable Foundryvtt";
+    options.foundryVTT = {
+        enable = lib.mkEnableOption "Enable FoundryVTT";
     };
     config = lib.mkIf cfg.enable {
         environment.systemPackages = with pkgs; [
             nodejs
-            pm2
+                pm2
         ];
         systemd.user.services.foundryvtt = {
             description = "Foundry VTT";
