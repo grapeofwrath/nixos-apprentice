@@ -7,6 +7,7 @@
     imports = [
         ./hardware-configuration.nix
         ./../modules/base
+        ./../modules/desktop
         ./../modules/users
     ];
 
@@ -23,6 +24,7 @@
         xdotool
         xorg.xwininfo
         yad
+        kdePackages.discover
         # gaming specific
         steam-run
         protonup-qt
@@ -38,41 +40,39 @@
         ];
         packages = with pkgs; [
             brave
-            discord
             spotify
             filezilla
             foliate
         ];
     };
 
-    jovian = {
-        decky-loader = {
-            user = gVar.defaultUser;
-            enable = true;
-        };
-        hardware = {
-            has.amd.gpu = true;
-            amd.gpu.enableBacklightControl = false;
-        };
+    programs = {
         steam = {
-            updater.splash = "steamos";
             enable = true;
-            autoStart = true;
-            user = gVar.defaultUser;
-            desktopSession = "plasma";
-        };
-        steamos = {
-            useSteamOSConfig = true;
+            remotePlay.openFirewall = true;
         };
     };
 
-    # Personal Modules
+    hardware.graphics = {
+        enable32Bit = true;
+        # extraPackages = [ pkgs.amdvlk ];
+        # extraPackages32 = [ pkgs.driversi686Linux.amdvlk ];
+    };
+
+    services.flatpak.enable = true;
+
+# Personal Modules
+    plasma = {
+        enable = true;
+        autoLogin = true;
+    };
+
     tailscaleAutoConnect = {
         enable = true;
         authkeyFile = config.sops.secrets.tailscale_key.path;
         loginServer = "https://login.tailscale.com";
     };
 
-    # Believe it or not, if you change this? Straight to jail.
+# Believe it or not, if you change this? Straight to jail.
     system.stateVersion = "24.05";
 }

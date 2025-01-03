@@ -18,8 +18,6 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
-
         jot.url = "github:grapeofwrath/jot";
         phortune.url = "github:grapeofwrath/phortune";
     };
@@ -97,7 +95,6 @@
                     };
                     modules = [
                         ./nixos/grapestation/configuration.nix
-                        inputs.jovian.nixosModules.default
                     ];
                 };
 
