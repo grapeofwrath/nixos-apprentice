@@ -4,9 +4,7 @@
     gLib,
     gVar,
     ...
-}: let
-    theme = gVar.palette;
-in {
+}: {
     imports = (gLib.scanPaths ./.) ++ [inputs.nixvim.homeManagerModules.nixvim];
 
     home.packages = with pkgs; [
@@ -98,25 +96,28 @@ in {
                 command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4";
             }
         ];
-        colorschemes.base16 = {
+        colorschemes.rose-pine = let c = gVar.campfire; in {
             enable = true;
-            colorscheme = {
-                base00 = "#${theme.base00}";
-                base01 = "#${theme.base01}";
-                base02 = "#${theme.base02}";
-                base03 = "#${theme.base03}";
-                base04 = "#${theme.base04}";
-                base05 = "#${theme.base05}";
-                base06 = "#${theme.base06}";
-                base07 = "#${theme.base07}";
-                base08 = "#${theme.base08}";
-                base09 = "#${theme.base09}";
-                base0A = "#${theme.base0A}";
-                base0B = "#${theme.base0B}";
-                base0C = "#${theme.base0C}";
-                base0D = "#${theme.base0D}";
-                base0E = "#${theme.base0E}";
-                base0F = "#${theme.base0F}";
+            settings = {
+                highlight_groups = {
+                    integer.fg = c.moon;
+                };
+                palette.main = {
+                    base = c.base;
+                    surface = c.surface;
+                    overlay = c.overlay;
+                    muted = c.muted;
+                    subtle = c.subtle;
+                    text = c.text;
+                    love = c.dawn;
+                    gold = c.evergreen;
+                    rose = c.ember;
+                    pine = c.dusk;
+                    foam = c.foam;
+                    iris = c.fern;
+                        # highlight = "#97A4AF";
+                        # shore = "#3A8098";
+                };
             };
         };
     };

@@ -25,65 +25,31 @@ in {
                     theme = "campfire";
                 };
                 themes = {
-                    campfire = {
-                        background = gVar.palette.base00;
-                        cursor-color = gVar.palette.base07;
-                        foreground = gVar.palette.base05;
-                        selection-background = gVar.palette.base05;
-                        selection-foreground = gVar.palette.base00;
+                    campfire = let c = gVar.campfire; in {
+                        background = c.base;
+                        cursor-color = c.text;
+                        foreground = c.text;
+                        selection-background = c.text;
+                        selection-foreground = c.base;
                         palette = [
-                            "0=#${gVar.palette.base00}"
-                            "1=#${gVar.palette.base08}"
-                            "2=#${gVar.palette.base0B}"
-                            "3=#${gVar.palette.base0A}"
-                            "4=#${gVar.palette.base0D}"
-                            "5=#${gVar.palette.base0E}"
-                            "6=#${gVar.palette.base0C}"
-                            "7=#${gVar.palette.base05}"
-                            "8=#${gVar.palette.base03}"
-                            "9=#${gVar.palette.base08}"
-                            "10=#${gVar.palette.base0B}"
-                            "11=#${gVar.palette.base0A}"
-                            "12=#${gVar.palette.base0D}"
-                            "13=#${gVar.palette.base0E}"
-                            "14=#${gVar.palette.base0C}"
-                            "15=#${gVar.palette.base07}"
+                            "0=${c.base}"
+                            "1=${c.dusk}"
+                            "2=${c.evergreen}"
+                            "3=${c.ember}"
+                            "4=${c.foam}"
+                            "5=${c.fern}"
+                            "6=${c.shore}"
+                            "7=${c.text}"
+                            "8=${c.subtle}"
+                            "9=${c.dusk}"
+                            "10=${c.evergreen}"
+                            "11=${c.ember}"
+                            "12=${c.foam}"
+                            "13=${c.fern}"
+                            "14=${c.shore}"
+                            "15=${c.moon}"
                         ];
                     };
-                };
-            };
-
-            kitty = {
-                enable = true;
-                font = {
-                    name = "CaskaydiaCove Nerd Font";
-                    size = cfg.fontSize;
-                };
-                settings = {
-                    scrollback_lines = 2000;
-                    wheel_scroll_min_lines = 1;
-                    window_padding_width = 9;
-                    confirm_os_window_close = 0;
-                    background = "#${gVar.palette.base00}";
-                    foreground = "#${gVar.palette.base05}";
-                    selection_background = "none";
-                    selection_foreground = "none";
-                    color0 = "#${gVar.palette.base00}";
-                    color1 = "#${gVar.palette.base08}";
-                    color2 = "#${gVar.palette.base0B}";
-                    color3 = "#${gVar.palette.base0A}";
-                    color4 = "#${gVar.palette.base0D}";
-                    color5 = "#${gVar.palette.base0E}";
-                    color6 = "#${gVar.palette.base0C}";
-                    color7 = "#${gVar.palette.base05}";
-                    color8 = "#${gVar.palette.base03}";
-                    color9 = "#${gVar.palette.base08}";
-                    color10 = "#${gVar.palette.base0B}";
-                    color11 = "#${gVar.palette.base0A}";
-                    color12 = "#${gVar.palette.base0D}";
-                    color13 = "#${gVar.palette.base0E}";
-                    color14 = "#${gVar.palette.base0C}";
-                    color15 = "#${gVar.palette.base07}";
                 };
             };
         };

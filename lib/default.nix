@@ -25,7 +25,4 @@
         (f: (path + "/${f}"))
         (builtins.attrNames
          (builtins.readDir path));
-
-    # colors
-    noHashHexes = palette: builtins.mapAttrs (name: value: lib.strings.removePrefix "#" value) palette;
 }

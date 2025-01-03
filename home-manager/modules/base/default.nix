@@ -217,18 +217,18 @@ in {
             settings = {
                 pane_frames = false;
                 theme = "campfire";
-                themes.campfire = {
-                    fg = gVar.palette.base05;
-                    bg = gVar.palette.base00;
-                    black = gVar.palette.base06;
-                    red = gVar.palette.base08;
-                    green = gVar.palette.base0B;
-                    yellow = gVar.palette.base0A;
-                    blue = gVar.palette.base0D;
-                    magenta = gVar.palette.base0E;
-                    cyan = gVar.palette.base0C;
-                    white = gVar.palette.base07;
-                    orange = gVar.palette.base09;
+                themes.campfire = let c = gVar.campfire; in {
+                    fg = c.text;
+                    bg = c.base;
+                    black = c.surface;
+                    red = c.dusk;
+                    green = c.evergreen;
+                    yellow = c.ember;
+                    blue = c.foam;
+                    magenta = c.fern;
+                    cyan = c.shore;
+                    white = c.moon;
+                    orange = c.dawn;
                 };
             };
         };

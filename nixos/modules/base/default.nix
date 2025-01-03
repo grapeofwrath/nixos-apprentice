@@ -90,7 +90,7 @@
     };
 
     console = let
-        theme = builtins.attrValues gVar.palette;
+        theme = builtins.attrValues gVar.campfire;
     in {
         colors = map (v: lib.strings.removePrefix "#" v) theme;
         useXkbConfig = true;
