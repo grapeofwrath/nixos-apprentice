@@ -35,7 +35,7 @@ in {
                     isNormalUser = true;
                     home = "/home/${gVar.defaultUser}";
                     group = "users";
-                    openssh.authorizedKeys.keys = builtins.map (builtins.readFile) keyScan;
+                    openssh.authorizedKeys.keys = map (builtins.readFile) keyScan;
                     # hashedPasswordFile = config.sops.secrets."user-passwords"."marcus".path;
                 };
             } // builtins.listToAttrs (map (username: {
@@ -50,7 +50,7 @@ in {
                         "networkmanager"
                         "libvirtd"
                     ];
-                    openssh.authorizedKeys.keys = builtins.map (builtins.readFile) keyScan;
+                    openssh.authorizedKeys.keys = map (builtins.readFile) keyScan;
                     # hashedPasswordFile = config.sops.secrets."user-passwords"."${username}".path;
                     # packages = with pkgs; [ ];
                 };

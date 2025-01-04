@@ -54,9 +54,9 @@
     };
 
     hardware.graphics = {
+        # I'm pretty positive that this is the same RADV package as vulkan-radeon on Arch.
+        # Which is why i don't use pkgs.amdvlk and pkgs.driversi686Linux like the NixOS wiki suggests.
         enable32Bit = true;
-        # extraPackages = [ pkgs.amdvlk ];
-        # extraPackages32 = [ pkgs.driversi686Linux.amdvlk ];
     };
 
     services.flatpak.enable = true;

@@ -20,7 +20,7 @@
             nix
             home-manager
             git
-            just
+            vim
             age
             ssh-to-age
             sops;

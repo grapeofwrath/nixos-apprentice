@@ -115,7 +115,7 @@
         homeConfigurations = {
             "marcus-grapelab" = let
                 hostName = "grapelab";
-            username = "marcus";
+                username = "marcus";
             in
                 home-manager.lib.homeManagerConfiguration {
                     inherit pkgs;
@@ -129,7 +129,7 @@
 
             "marcus-grapespire" = let
                 hostName = "grapespire";
-            username = "marcus";
+                username = "marcus";
             in
                 home-manager.lib.homeManagerConfiguration {
                     inherit pkgs;
@@ -143,7 +143,7 @@
 
             "marcus-grapestation" = let
                 hostName = "grapestation";
-            username = "marcus";
+                username = "marcus";
             in
                 home-manager.lib.homeManagerConfiguration {
                     inherit pkgs;
