@@ -2,7 +2,7 @@
 
 *Keep It Simple Stupid*
 
-## NixOS
+### NixOS
 
 Each system added to the flake has a corresponding directory in [nixos/](./nixos/) that contains the main configuration file as well as the hardware configuration.
 The directory is titled the hostname of its system.
@@ -13,7 +13,7 @@ They are sorted between base, desktop, server, and users.
 Options are assigned to these directories if they are meant to be used across multiple configurations.
 Modules are separated into files if they are opt-in or they have different custom options to choose from for each configuration.
 
-## Home Manager
+### Home Manager
 
 Home Manager is installed as a NixOS module (see [users/default.nix](./nixos/modules/users/default.nix)) and as standalone configurations in the flake.
 Each configuration added to the flake has a file located in [home-manager/](./home-manager/).
@@ -25,9 +25,9 @@ They are sorted between base, desktop, and server.
 Similar to the NixOS modules, options are assigned to these directories if they are meant to be used across multiple configurations.
 Modules are also separated into files if they are opt-in or they have different custom options to choose from for each configuration.
 
-## [Users](./nixos/modules/users/default.nix)
+### [Users](./nixos/modules/users/default.nix)
 
-Technically, I can add more uses to a system from the users module using **users.additionalUsers**.
+Technically, I can add more users to a system from the users module using **users.additionalUsers**.
 This currently works as a list of usernames.
 Each user in the list is then a configuration that looks like so:
 
@@ -53,7 +53,7 @@ home-manager.users = {
 This works well enough, but it's not very flexible.
 I'm going to expand on it at some point with some submodules and such; I just don't have any multi-user systems right now.
 
-## [gLib](./lib/default.nix)
+### [gLib](./lib/default.nix)
 
 Imported in the flake as **gLib**, this contains two helper functions: **scanPaths** and **scanFIles**.
 
@@ -82,7 +82,7 @@ in {
     ...
 ```
 
-## [gVar](./var/default.nix)
+### [gVar](./var/default.nix)
 
 This simply contains the **defaultUser** variable as well as the color palette and any other variables I might want to add in the future.
 
