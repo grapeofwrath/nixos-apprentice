@@ -29,7 +29,7 @@ Modules are also separated into files if they are opt-in or they have different 
 
 Technically, I can add more users to a system from the users module using **users.additionalUsers**.
 This currently works as a list of usernames.
-Each user in the list is then a configuration that looks like so:
+Each user in the list is then assigned a configuration that looks like so:
 
 ```nix
 username = {
@@ -51,7 +51,7 @@ home-manager.users = {
 ```
 
 This works well enough, but it's not very flexible.
-I'm going to expand on it at some point with some submodules and such; I just don't have any multi-user systems right now.
+I'm going to expand on it at some point with submodules and such; I just don't have any multi-user systems right now.
 
 ### [gLib](./lib/default.nix)
 
