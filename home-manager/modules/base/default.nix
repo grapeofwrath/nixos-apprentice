@@ -1,236 +1,210 @@
 {
-    config,
-    pkgs,
-    inputs,
-    hostName,
-    gLib,
-    gVar,
-    ...
+  config,
+  pkgs,
+  inputs,
+  hostName,
+  gLib,
+  gVar,
+  ...
 }: let
-    keyName = "${config.home.username}-${hostName}";
+  keyName = "${config.home.username}-${hostName}";
 in {
-    imports = (gLib.scanPaths ./.) ++ [inputs.sops-nix.homeManagerModules.sops];
+  imports = (gLib.scanPaths ./.) ++ [inputs.sops-nix.homeManagerModules.sops];
 
-    home = {
-        homeDirectory = "/home/${config.home.username}";
+  home = {
+    homeDirectory = "/home/${config.home.username}";
 
-        packages = with pkgs; [
-            font-awesome
-            polkit
-            tree
-            imagemagick
-        ];
-
-        # Believe it or not, if you change this? Straight to jail.
-        stateVersion = "24.05";
+    shellAliases = {
+      n = "nvim";
+      ".." = "cd ..";
     };
 
-    systemd.user.startServices = "sd-switch";
+    # Believe it or not, if you change this? Straight to jail.
+    stateVersion = "24.05";
+  };
 
-    sops = {
-        age.keyFile = "/home/${config.home.username}/.config/sops/age/keys.txt";
-        defaultSopsFile = ../../../secrets.yaml;
-        validateSopsFiles = false;
-        secrets = {
-            "private_keys/${keyName}" = {
-                path = "/home/${config.home.username}/.ssh/id_${keyName}";
-            };
-        };
+  systemd.user.startServices = "sd-switch";
+
+  sops = {
+    age.keyFile = "/home/${config.home.username}/.config/sops/age/keys.txt";
+    defaultSopsFile = ../../../secrets.yaml;
+    validateSopsFiles = false;
+    secrets = {
+      "private_keys/${keyName}" = {
+        path = "/home/${config.home.username}/.ssh/id_${keyName}";
+      };
+    };
+  };
+
+  services.ssh-agent.enable = true;
+
+  programs = {
+    btop.enable = true;
+    fzf.enable = true;
+    home-manager.enable = true;
+    ripgrep.enable = true;
+
+    bash = {
+      enable = true;
+      initExtra = ''
+        if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "nu" && -z ''${BASH_EXECUTION_STRING} ]]
+            then
+                shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+                exec ${pkgs.nushell}/bin/nu $LOGIN_OPTION
+                fi
+      '';
     };
 
-    services.ssh-agent.enable = true;
+    # fish = {
+    #   enable = true;
+    #   interactiveShellInit = ''
+    #     set fish_greeting # Disable greeting
+    #   '';
+    #   functions = {
+    #     "home" = {
+    #       body = "home-manager switch --flake .#$argv";
+    #     };
+    #     "flake" = {
+    #       body = "sudo nixos-rebuild $argv[1] --flake $argv[2]";
+    #     };
+    #   };
+    #   shellAliases = {
+    #     da = "direnv allow";
+    #     taildrop = "sudo tailscale file get .";
+    #   };
+    # };
 
-    programs = {
-        btop.enable = true;
-        fzf.enable = true;
-        home-manager.enable = true;
-        ripgrep.enable = true;
-
-        bash = {
-            enable = true;
-            initExtra = ''
-                if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
-                    then
-                        shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
-                        exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
-                        fi
-            '';
-        };
-
-        fish = {
-            enable = true;
-            interactiveShellInit = ''
-                set fish_greeting # Disable greeting
-            '';
-            functions = {
-                "home" = {
-                    body = "home-manager switch --flake .#$argv";
-                };
-                "flake" = {
-                    body = "sudo nixos-rebuild $argv[1] --flake $argv[2]";
-                };
-            };
-            shellAliases = {
-                n = "nvim";
-                da = "direnv allow";
-                ".." = "cd ..";
-                taildrop = "sudo tailscale file get .";
-            };
-        };
-
-        nushell = {
-            enable = true;
-            extraConfig = ''
-                let carapace_completer = {|spans|
-                    carapace $spans.0 nushell $spans | from json
-                }
-                $env.config = {
-                    show_banner: false,
-                    completions: {
-                        case_sensitive: false
-                            quick: true
-                            partial: true
-                            algorithm: "fuzzy"
-                            external: {
-                                enable: true
-                                max_results: 100
-                                completer: $carapace_completer
-                            }
-                    }
-                }
-                $env.PATH = ($env.PATH |
-                        split row (char esep) |
-                        prepend /home/myuser/.apps |
-                        append /usr/bin/env
-                        )
-                    def "flake rebuild" [sub: string = switch] {
-                        sudo nixos-rebuild $sub --flake .
-                    }
-                def "flake update" [] {
-                    sudo nix flake update
-                }
-            '';
-        };
-
-        carapace = {
-            enable = true;
-            enableNushellIntegration = true;
-        };
-
-        git = {
-            enable = true;
-            userName = "grapeofwrath";
-            userEmail = "69535018+grapeofwrath@users.noreply.github.com";
-            extraConfig = {
-                url."ssh://git@github.com" = {
-                    insteadOf = "https://github.com";
-                };
-                init.defaultBranch = "main";
-            };
-        };
-
-        keychain = {
-            enable = true;
-            enableFishIntegration = true;
-            enableNushellIntegration = true;
-            keys = ["id_${keyName}"];
-            extraFlags = ["--quiet"];
-        };
-
-        ssh = {
-            enable = true;
-            addKeysToAgent = "yes";
-        };
-
-        zoxide = {
-            enable = true;
-            enableBashIntegration = true;
-            enableFishIntegration = true;
-            enableNushellIntegration = true;
-        };
-
-        direnv = {
-            enable = true;
-            enableBashIntegration = true;
-            enableNushellIntegration = true;
-            nix-direnv.enable = true;
-        };
-
-        starship = {
-            enable = true;
-            enableBashIntegration = true;
-            enableFishIntegration = true;
-            enableNushellIntegration = true;
-            settings = {
-                aws.disabled = true;
-                gcloud.disabled = true;
-                kubernetes.disabled = true;
-                directory = {
-                    #trunicate_length = 8;
-                    #trunicate_to_repo = false;
-                    read_only = " 󰌾";
-                };
-                username = {
-                    format = "[$user]($style)@";
-                    show_always = true;
-                };
-                hostname = {
-                    ssh_only = false;
-                    style = "bold green";
-                    ssh_symbol = " ";
-                };
-                character = {
-                    success_symbol = "[➜](bold green)";
-                    error_symbol = "[➜](bold red)";
-                };
-                c.symbol = " ";
-                docker_context.symbol = " ";
-                git_branch.symbol = " ";
-                golang.symbol = " ";
-                lua.symbol = " ";
-                memory_usage.symbol = "󰍛 ";
-                nix_shell.symbol = " ";
-                package.symbol = "󰏗 ";
-                python.symbol = " ";
-                rust.symbol = " ";
-                zig.symbol = " ";
-                os.symbols = {
-                    Arch = " ";
-                    Debian = " ";
-                    EndeavourOS = " ";
-                    Fedora = " ";
-                    Garuda = "󰛓 ";
-                    Linux = " ";
-                    Macos = " ";
-                    NixOS = " ";
-                    Pop = " ";
-                    Raspbian = " ";
-                    Ubuntu = " ";
-                    Unknown = " ";
-                    Windows = "󰍲 ";
-                };
-            };
-        };
-
-        zellij = {
-            enable = true;
-            settings = {
-                pane_frames = false;
-                theme = "campfire";
-                themes.campfire = let c = gVar.campfire; in {
-                    fg = c.text;
-                    bg = c.base;
-                    black = c.surface;
-                    red = c.dusk;
-                    green = c.evergreen;
-                    yellow = c.ember;
-                    blue = c.foam;
-                    magenta = c.fern;
-                    cyan = c.shore;
-                    white = c.moon;
-                    orange = c.dawn;
-                };
-            };
-        };
+    nushell = {
+      enable = true;
+      configFile.source = ./../config/nushell/config.nu;
+      extraConfig = builtins.readFile ./../config/nushell/nix.nu;
+      shellAliases = {
+        n = "nvim";
+        ".." = "cd ..";
+      };
     };
+
+    carapace = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    git = {
+      enable = true;
+      userName = "grapeofwrath";
+      userEmail = "69535018+grapeofwrath@users.noreply.github.com";
+      extraConfig = {
+        url."ssh://git@github.com" = {
+          insteadOf = "https://github.com";
+        };
+        init.defaultBranch = "main";
+      };
+    };
+
+    keychain = {
+      enable = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+      keys = ["id_${keyName}"];
+      extraFlags = ["--quiet"];
+    };
+
+    ssh = {
+      enable = true;
+      addKeysToAgent = "yes";
+    };
+
+    zoxide = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+    };
+
+    direnv = {
+      enable = true;
+      enableBashIntegration = true;
+      enableNushellIntegration = true;
+      nix-direnv.enable = true;
+    };
+
+    starship = {
+      enable = true;
+      enableBashIntegration = true;
+      enableFishIntegration = true;
+      enableNushellIntegration = true;
+      settings = {
+        aws.disabled = true;
+        gcloud.disabled = true;
+        kubernetes.disabled = true;
+        directory = {
+          #trunicate_length = 8;
+          #trunicate_to_repo = false;
+          read_only = " 󰌾";
+        };
+        username = {
+          format = "[$user]($style)@";
+          show_always = true;
+        };
+        hostname = {
+          ssh_only = false;
+          style = "bold green";
+          ssh_symbol = " ";
+        };
+        character = {
+          success_symbol = "[➜](bold green)";
+          error_symbol = "[➜](bold red)";
+        };
+        c.symbol = " ";
+        docker_context.symbol = " ";
+        git_branch.symbol = " ";
+        golang.symbol = " ";
+        lua.symbol = " ";
+        memory_usage.symbol = "󰍛 ";
+        nix_shell.symbol = " ";
+        package.symbol = "󰏗 ";
+        python.symbol = " ";
+        rust.symbol = " ";
+        zig.symbol = " ";
+        os.symbols = {
+          Arch = " ";
+          Debian = " ";
+          EndeavourOS = " ";
+          Fedora = " ";
+          Garuda = "󰛓 ";
+          Linux = " ";
+          Macos = " ";
+          NixOS = " ";
+          Pop = " ";
+          Raspbian = " ";
+          Ubuntu = " ";
+          Unknown = " ";
+          Windows = "󰍲 ";
+        };
+      };
+    };
+
+    zellij = {
+      enable = true;
+      settings = {
+        pane_frames = false;
+        theme = "campfire";
+        themes.campfire = let
+          c = gVar.campfire;
+        in {
+          fg = c.text;
+          bg = c.base;
+          black = c.surface;
+          red = c.dusk;
+          green = c.evergreen;
+          yellow = c.ember;
+          blue = c.foam;
+          magenta = c.fern;
+          cyan = c.shore;
+          white = c.moon;
+          orange = c.dawn;
+        };
+      };
+    };
+  };
 }

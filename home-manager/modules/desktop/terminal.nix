@@ -23,6 +23,9 @@ in {
                 settings = {
                     font-size = cfg.fontSize;
                     theme = "campfire";
+                    window-padding-x = 2;
+                    window-padding-y = 2;
+                    window-padding-balance = true;
                 };
                 themes = {
                     campfire = let c = gVar.campfire; in {

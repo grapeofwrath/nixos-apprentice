@@ -20,6 +20,8 @@ in {
             golangci-lint
             air
             templ
+            # zig
+            zig
         ];
     };
 }

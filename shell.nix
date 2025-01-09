@@ -15,12 +15,14 @@
     default = pkgs.mkShell {
         NIX_CONFIG = "extra-experimental-features = nix-command flakes repl-flake";
         nativeBuildInputs = builtins.attrValues {
-            inherit
-            (pkgs)
+            inherit (pkgs)
             nix
             home-manager
             git
             vim
+            cachix
+            # compose2nix
+            nixd
             age
             ssh-to-age
             sops;

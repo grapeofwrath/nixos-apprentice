@@ -37,12 +37,6 @@
         # secrets are output to /run/secrets
         # ie /run/secrets/gitea_dbpass
         secrets = {
-            wifi-ssid = {
-                group = "users";
-            };
-            wifi-pass = {
-                group = "users";
-            };
             nextcloud_admin = {
                 group = "nextcloud";
             };
@@ -60,6 +54,15 @@
         variables = {
             EDITOR = "nvim";
         };
+        systemPackages = with pkgs; [
+            font-awesome
+            polkit
+            tree
+            imagemagick
+            curl
+            wget
+            unzip
+        ];
     };
 
     boot = {

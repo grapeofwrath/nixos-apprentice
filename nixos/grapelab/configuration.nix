@@ -15,10 +15,6 @@
     virtualisation.libvirtd.enable = true;
 
     environment.systemPackages = with pkgs; [
-        vim
-        wget
-        curl
-        wget
         virt-manager
         qemu
         qemu_kvm
@@ -33,11 +29,8 @@
             "podman"
             "nextcloud"
         ];
-        packages = with pkgs; [
-            brave
-            filezilla
-            foliate
-        ];
+        # packages = with pkgs; [
+        # ];
     };
 
     # Personal Modules

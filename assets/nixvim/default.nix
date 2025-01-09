@@ -68,6 +68,7 @@
         };
         opts = {
             autoindent = true;
+            cursorline = true;
             expandtab = true;
             hidden = true;
             helpheight = 9999;
@@ -86,7 +87,6 @@
             splitbelow = true;
             splitright = true;
             tabstop = 4;
-            termguicolors = true;
             updatetime = 100;
         };
         autoCmd = [
@@ -100,7 +100,11 @@
             enable = true;
             settings = {
                 highlight_groups = {
-                    integer.fg = c.moon;
+                    Include.fg = c.shore;
+                    Integer.fg = c.moon;
+                    Keyword.fg = c.dusk;
+                    nixArgumentDefinition.fg = c.foam;
+                    nixAttributeAssignment.fg = c.highlight;
                 };
                 palette.main = {
                     base = c.base;
@@ -109,14 +113,12 @@
                     muted = c.muted;
                     subtle = c.subtle;
                     text = c.text;
-                    love = c.dawn;
+                    love = c.ember;
                     gold = c.evergreen;
-                    rose = c.ember;
+                    rose = c.dawn;
                     pine = c.dusk;
                     foam = c.foam;
                     iris = c.fern;
-                        # highlight = "#97A4AF";
-                        # shore = "#3A8098";
                 };
             };
         };

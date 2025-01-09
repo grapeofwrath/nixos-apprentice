@@ -1,12 +1,12 @@
 {...}: {
     programs.nixvim.plugins.cmp = {
         enable = true;
+        autoEnableSources = true;
         settings = {
             sources = [
                 {name = "path";}
                 {name = "nvim_lsp";}
                 {name = "luasnip";}
-                # {name = "crates";}
                 {name = "buffer";}
             ];
             mapping = {

@@ -20,6 +20,7 @@
                     tailwindcss.enable = true;
                     templ.enable = true;
                     ts_ls.enable = true;
+                    zls.enable = true;
                 };
             };
             lspkind = {

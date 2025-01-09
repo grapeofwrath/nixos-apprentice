@@ -14,13 +14,9 @@
     virtualisation.libvirtd.enable = true;
 
     environment.systemPackages = with pkgs; [
-        vim
-        curl
-        wget
         virt-manager
         qemu
         qemu_kvm
-        unzip
         xdotool
         xorg.xwininfo
         yad
@@ -38,12 +34,8 @@
             "libvirtd"
             "input"
         ];
-        packages = with pkgs; [
-            brave
-            spotify
-            filezilla
-            foliate
-        ];
+        # packages = with pkgs; [
+        # ];
     };
 
     programs = {
