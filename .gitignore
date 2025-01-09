@@ -2,3 +2,4 @@ result
 result-*
 .direnv
 err
+nixos-switch.log
