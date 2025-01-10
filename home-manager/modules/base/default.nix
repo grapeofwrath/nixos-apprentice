@@ -4,7 +4,7 @@
   inputs,
   hostName,
   gLib,
-  gVar,
+  campfire,
   ...
 }: let
   keyName = "${config.home.username}-${hostName}";
@@ -54,25 +54,6 @@ in {
                 fi
       '';
     };
-
-    # fish = {
-    #   enable = true;
-    #   interactiveShellInit = ''
-    #     set fish_greeting # Disable greeting
-    #   '';
-    #   functions = {
-    #     "home" = {
-    #       body = "home-manager switch --flake .#$argv";
-    #     };
-    #     "flake" = {
-    #       body = "sudo nixos-rebuild $argv[1] --flake $argv[2]";
-    #     };
-    #   };
-    #   shellAliases = {
-    #     da = "direnv allow";
-    #     taildrop = "sudo tailscale file get .";
-    #   };
-    # };
 
     nushell = {
       enable = true;
@@ -190,7 +171,7 @@ in {
         pane_frames = false;
         theme = "campfire";
         themes.campfire = let
-          c = gVar.campfire;
+          c = campfire;
         in {
           fg = c.text;
           bg = c.base;

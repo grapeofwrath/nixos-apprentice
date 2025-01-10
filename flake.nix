@@ -45,124 +45,85 @@
       };
     };
 
-    gLib = import ./lib {inherit (nixpkgs) lib;};
-    gVar = import ./var;
     gVimConfig = inputs.nvf.lib.neovimConfiguration {
       inherit pkgs;
       modules = [./pkgs/neovim];
+    };
+
+    gLib = {
+      scanPaths = path:
+        map (f: (path + "/${f}"))
+        (builtins.attrNames
+          (nixpkgs.lib.attrsets.filterAttrs
+            (
+              path: _type:
+                (_type == "directory")
+                || (
+                  (path != "default.nix") && (nixpkgs.lib.strings.hasSuffix ".nix" path)
+                )
+            ) (builtins.readDir path)));
+      scanFiles = path:
+        map (f: (path + "/${f}")) (builtins.attrNames (builtins.readDir path));
+    };
+
+    # vars
+    defaultUser = "marcus";
+    systems = [
+      "grapecontrol"
+      "grapelab"
+      "grapespire"
+      "grapestation"
+    ];
+    campfire = {
+      base = "#14171F";
+      surface = "#2A2F3C";
+      overlay = "#323848";
+      muted = "#3F475A";
+      subtle = "#6D7A88";
+      highlight = "#97A4AF";
+      moon = "#DDD7CA";
+      text = "#EFC164";
+      ember = "#F3835D";
+      dawn = "#F35955";
+      dusk = "#A885C1";
+      shore = "#3A8098";
+      foam = "#70ADC2";
+      evergreen = "#468966";
+      fern = "#67CC8E";
     };
   in {
     formatter.${system} = pkgs.alejandra;
 
     packages.${system}.gVim = gVimConfig.neovim;
 
-    # nixosModules = import ./modules/nixos;
-
-    # homeManagerModules = import ./modules/home-manager;
-
-    nixosConfigurations = {
-      grapelab = let
-        hostName = "grapelab";
-      in
-        nixpkgs.lib.nixosSystem {
+    nixosConfigurations = builtins.listToAttrs (map (hostName: {
+        name = hostName;
+        value = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
             inherit inputs outputs system pkgs stable;
-            inherit gLib gVar hostName;
+            inherit gLib gVimConfig defaultUser hostName campfire;
           };
           modules = [
-            ./nixos/grapelab/configuration.nix
+            ./nixos/${hostName}/configuration.nix
           ];
         };
+      })
+      systems);
 
-      grapespire = let
-        hostName = "grapespire";
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs outputs system pkgs stable;
-            inherit gLib gVar gVimConfig hostName;
-          };
-          modules = [
-            ./nixos/grapespire/configuration.nix
-          ];
-        };
-
-      grapestation = let
-        hostName = "grapestation";
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs outputs system pkgs stable;
-            inherit gLib gVar hostName;
-          };
-          modules = [
-            ./nixos/grapestation/configuration.nix
-          ];
-        };
-
-      grapecontrol = let
-        hostName = "grapecontrol";
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs outputs system pkgs stable;
-            inherit gLib gVar hostName;
-          };
-          modules = [
-            ./nixos/grapecontrol/configuration.nix
-          ];
-        };
-    };
-
-    homeConfigurations = {
-      "marcus-grapelab" = let
-        hostName = "grapelab";
-        username = "marcus";
-      in
-        home-manager.lib.homeManagerConfiguration {
+    homeConfigurations = builtins.listToAttrs (map (hostName: {
+        name = "${defaultUser}-${hostName}";
+        value = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
             inherit inputs outputs system;
-            inherit gLib gVar hostName username;
+            inherit gLib defaultUser hostName campfire;
           };
           modules = [
-            ./home-manager/marcus-grapelab.nix
+            ./home-manager/${defaultUser}-${hostName}.nix
           ];
         };
-
-      "marcus-grapespire" = let
-        hostName = "grapespire";
-        username = "marcus";
-      in
-        home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = {
-            inherit inputs outputs system;
-            inherit gLib gVar hostName username;
-          };
-          modules = [
-            ./home-manager/marcus-grapespire.nix
-          ];
-        };
-
-      "marcus-grapestation" = let
-        hostName = "grapestation";
-        username = "marcus";
-      in
-        home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = {
-            inherit inputs outputs system;
-            inherit gLib gVar hostName username;
-          };
-          modules = [
-            ./home-manager/marcus-grapestation.nix
-          ];
-        };
-    };
+      })
+      systems);
   };
 }

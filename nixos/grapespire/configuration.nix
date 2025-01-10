@@ -1,9 +1,7 @@
 {
   config,
   pkgs,
-  inputs,
-  system,
-  gVar,
+  defaultUser,
   ...
 }: {
   imports = [
@@ -22,7 +20,7 @@
     qemu_kvm
   ];
 
-  users.users.${gVar.defaultUser} = {
+  users.users.${defaultUser} = {
     extraGroups = [
       "wheel"
       "networkmanager"

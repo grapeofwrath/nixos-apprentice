@@ -6,9 +6,10 @@
   lib,
   system,
   gLib,
-  gVar,
   gVimConfig,
+  defaultUser,
   hostName,
+  campfire,
   ...
 }:
 with lib; let
@@ -32,10 +33,10 @@ in {
       mutableUsers = true;
       users =
         {
-          ${gVar.defaultUser} = {
-            name = "${gVar.defaultUser}";
+          ${defaultUser} = {
+            name = "${defaultUser}";
             isNormalUser = true;
-            home = "/home/${gVar.defaultUser}";
+            home = "/home/${defaultUser}";
             group = "users";
             openssh.authorizedKeys.keys = map (builtins.readFile) keyScan;
           };
@@ -67,12 +68,12 @@ in {
       useUserPackages = true;
       useGlobalPkgs = true;
       extraSpecialArgs = {
-        inherit inputs outputs system gLib gVar hostName;
+        inherit inputs outputs system gLib defaultUser hostName campfire;
       };
 
       users =
         {
-          ${gVar.defaultUser} = import ./../../../home-manager/${gVar.defaultUser}-${hostName}.nix;
+          ${defaultUser} = import ./../../../home-manager/${defaultUser}-${hostName}.nix;
         }
         // builtins.listToAttrs (map (username: {
             name = username;
