@@ -61,10 +61,9 @@ This works well enough, but it's not very flexible. I'm going to expand on it at
 some point with submodules and such; I just don't have any multi-user systems
 right now.
 
-### [gLib](./lib/default.nix)
+### gLib
 
-Imported in the flake as **gLib**, this contains two helper functions:
-**scanPaths** and **scanFIles**.
+This contains two helper functions: **scanPaths** and **scanFIles**.
 
 **scanPaths** is used to import all nix files _(excluding default.nix)_ in a
 directory.
@@ -126,8 +125,8 @@ Generate an ssh key for the user and add it to [secrets.yaml](./secrets.yaml),
 removing the file afterwards. Move the public key to
 [nixos/modules/users/keys/](./nixos/modules/users/keys/) and don't forget to
 upload it to github. Add any NixOS/Home-Manager files to [nixos/](./nixos/) and
-[home-manager/](./home-manager/) and update the flake accordingly. Rebuild the
-system with the new configuration.
+[home-manager/](./home-manager/) and add the new hostName to the **systems**
+list in the flake. Rebuild the system with the new configuration.
 
 ```sh
 ssh-keygen -t ed25519 -f id_<user>-<host> -C <user>@<host>
