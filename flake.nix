@@ -1,5 +1,5 @@
 {
-  description = "Grapeofwrath's NixOS & Home Manager configurations";
+  description = "NixOS Apprentice: a Simple Gaming Template";
 
   inputs = {
     # switch these if you want to use stable (you probably don't, trust me bro)
